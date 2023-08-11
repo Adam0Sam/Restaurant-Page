@@ -298,7 +298,8 @@ main{
     gap: 30px;
 }
 
-.name-top button{
+.floor1-btn,
+.floor2-btn{
     all: unset;
     border-radius: var(--border-radius);
     background-color: var(--actions-extra-light-gray);
@@ -308,6 +309,11 @@ main{
     font-weight: 500;
     font-size: 15px; 
     color: var(--actions-extras-unactive-btn);
+}
+
+.floor-btn-clicked{
+    background-color: var(--salmon-300);
+    color: #000;
 }
 
 #table-btn-clicked{
@@ -340,15 +346,17 @@ main{
     font-weight: 500;
 }
 
-.table:focus,
-.table:hover{
-    background-color: #231F20;
+.restaurant-text{
+    pointer-events: none; 
+}
+.restaurant-table{
+    cursor:pointer;
 }
 
-.table-selected{
-
+.restaurant-table:hover,
+.table-clicked{
+    content: url('./images/table-hover.svg');
 }
-
 .selection{
     display: flex;
     align-items: center;

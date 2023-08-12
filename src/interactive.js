@@ -1,9 +1,12 @@
-// function selectedFloor
+const menuObject = (oldName, category, spiciness, imgLink) => {
+    let name = oldName.toUpperCase(); // Private variable to store uppercase name
 
+    return {
+        name,
+        category,
+        spiciness,
+        imgLink
+    };
+};
 
-function selectedTable(id){
-    this.setAttribute('src', './images/table-hover.svg');
-    console.log(id);
-}
-
-export {selectedTable};
+export {menuObject};

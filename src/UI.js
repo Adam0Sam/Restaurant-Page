@@ -2,32 +2,25 @@ import { menuObject } from "./interactive";
 
 const UI = (() => {
     const content = document.querySelector('.content');
+
     const home = () => {
 
         const loadNameTop = () => {
             nameTop.innerHTML =
                 `<p>TABLE LIST</p>
             <div class="buttons">
-            <button class="floor1-btn floor-btn-clicked">First Floor</button>
-            <button class="floor2-btn">Second Floor</button>
+            <button class="floor-btn floor-1 floor-btn-clicked">First Floor</button>
+            <button class="floor-btn floor-2">Second Floor</button>
             </div>`;
             content.appendChild(nameTop);
 
-            floorBtnClick();
-        };
-        const floorBtnClick = () => {
-            const buttonToggle = (button) => {
-                button.addEventListener('click', () => {
-                    document.querySelector('.floor1-btn').classList.toggle('floor-btn-clicked');
-                    document.querySelector('.floor2-btn').classList.toggle('floor-btn-clicked');
-
-                    const floor = button.classList.contains('floor1-btn') ? 0 : 6;
+            // floorBtnClick();
+            let startLoadingTables;
+            buttonsToggle(document.querySelectorAll('.floor-btn'), 'floor-btn-clicked',
+                startLoadingTables = (item) => {
+                    const floor = item.classList.contains('floor-1') ? 0 : 6;
                     loadTables(floor);
                 });
-            };
-
-            buttonToggle(document.querySelector('.floor1-btn'));
-            buttonToggle(document.querySelector('.floor2-btn'))
         };
 
         const loadTables = (floor) => {
@@ -59,19 +52,16 @@ const UI = (() => {
             </div>`;
             content.appendChild(tables);
             loadSelection();
-            tableClicked();
+            let setTableId;
+            buttonsToggle(document.querySelectorAll('.restaurant-table'), 'table-clicked',
+                setTableId = (item) => {
+                    const tableId = item.classList[1].split('-')[1];
+                    document.querySelector('.table-selection').innerText = tableId;
+                }
+            );
             selectionBtnClicked();
-        };
-        const tableClicked = () => {
-            const tables = document.querySelectorAll('.restaurant-table');
-            tables.forEach((table) => table.addEventListener('click', () => {
-                tables.forEach((table) => {
-                    table.classList.remove('table-clicked');
-                });
-                table.classList.add('table-clicked');
-                const tableId = table.classList[1].split('-')[1];
-                document.querySelector('.table-selection').innerText = tableId;
-            }));
+
+
         };
 
         const loadSelection = (tableId) => {
@@ -128,9 +118,9 @@ const UI = (() => {
                 const foodItemContainer = document.createElement('div');
                 foodItemContainer.classList.add('food-item-container');
 
-                let spicyIcons=``;
+                let spicyIcons = ``;
                 for (let i = 0; i < menuItems[item].spiciness; i++) {
-                    spicyIcons+=`<img src="./images/chilli.svg">`
+                    spicyIcons += `<img src="./images/chilli.svg">`
                 }
 
                 foodItemContainer.innerHTML =
@@ -169,13 +159,23 @@ const UI = (() => {
         clear();
     }
 
+    // create an a function argument later down the road to avoid the mess of ifs
+    const buttonsToggle = (nodelist, toggleClass, additionalFunction) => {
+        const list = Array.from(nodelist); // for some reason I need to convert the nodelist into an array within the function itself
+        list.forEach(item => item.addEventListener('click', () => {
+            list.forEach(item => item.classList.remove(toggleClass));
+            item.classList.add(toggleClass);
+            additionalFunction(item);
+        }));
+    };
+
     const clear = (element) => {
         while (element.lastChild) {
             element.lastChild.remove();
         }
     };
 
-    return { home, menu, payment, clear }
+    return { home, menu, payment, clear, buttonsToggle }
 })();
 
 export default UI;

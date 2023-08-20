@@ -200,7 +200,7 @@ main{
     overflow: auto;
 }
 
-.menu>li{
+.menu-item{
     margin-bottom: 80px;
     fill: var(--green-100);
     font-size: 12px;
@@ -208,18 +208,19 @@ main{
     color: rgba(0, 0, 0, 0.26);
 }
 
-.menu>li>svg{
+.menu-item>svg{
     padding-bottom: 8px;
 }
 
-.menu>li:focus,
-.menu>li:hover{
+.menu-item:focus,
+.menu-item:hover,
+.menu-item-active{
     cursor: pointer;
     fill: var(--blue-600);
     color: var(--salmon-600);
 }
 
-.menu>li:last-child{
+.menu-item:last-child{
     all: unset;
     color: #000;
 }
@@ -300,8 +301,7 @@ main{
     gap: 30px;
 }
 
-.floor1-btn,
-.floor2-btn{
+.floor-btn{
     all: unset;
     border-radius: var(--border-radius);
     background-color: var(--actions-extra-light-gray);

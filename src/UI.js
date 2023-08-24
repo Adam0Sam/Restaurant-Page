@@ -4,7 +4,6 @@ const UI = (() => {
     const content = document.querySelector('.content');
 
     const home = () => {
-
         const loadNameTop = () => {
             nameTop.innerHTML =
                 `<p>TABLE LIST</p>
@@ -14,13 +13,12 @@ const UI = (() => {
             </div>`;
             content.appendChild(nameTop);
 
-            // floorBtnClick();
-            let startLoadingTables;
-            buttonsToggle(document.querySelectorAll('.floor-btn'), 'floor-btn-clicked',
-                startLoadingTables = (item) => {
-                    const floor = item.classList.contains('floor-1') ? 0 : 6;
-                    loadTables(floor);
-                });
+            const startLoadingTables = (item) => {
+                const floor = item.classList.contains('floor-1') ? 0 : 6;
+                loadTables(floor)
+            };
+
+            buttonsToggle(document.querySelectorAll('.floor-btn'), 'floor-btn-clicked', startLoadingTables);
         };
 
         const loadTables = (floor) => {
@@ -52,13 +50,11 @@ const UI = (() => {
             </div>`;
             content.appendChild(tables);
             loadSelection();
-            let setTableId;
-            buttonsToggle(document.querySelectorAll('.restaurant-table'), 'table-clicked',
-                setTableId = (item) => {
-                    const tableId = item.classList[1].split('-')[1];
-                    document.querySelector('.table-selection').innerText = tableId;
-                }
-            );
+            const setTableId = (item) => {
+                const tableId = item.classList[1].split('-')[1];
+                document.querySelector('.table-selection').innerText = tableId;
+            };
+            buttonsToggle(document.querySelectorAll('.restaurant-table'), 'table-clicked', setTableId);
             selectionBtnClicked();
 
 
@@ -97,7 +93,6 @@ const UI = (() => {
         selection.classList.add('selection');
         loadTables(0);
     };
-
 
     const menu = () => {
 
@@ -159,7 +154,6 @@ const UI = (() => {
         clear();
     }
 
-    // create an a function argument later down the road to avoid the mess of ifs
     const buttonsToggle = (nodelist, toggleClass, additionalFunction) => {
         const list = Array.from(nodelist); // for some reason I need to convert the nodelist into an array within the function itself
         list.forEach(item => item.addEventListener('click', () => {
@@ -175,7 +169,45 @@ const UI = (() => {
         }
     };
 
-    return { home, menu, payment, clear, buttonsToggle }
+    const load = {
+        menuBtns() {
+            const homeBtn = document.getElementById('HOME');
+            homeBtn.addEventListener('click', () => {
+                clear(content)
+                home()
+            });
+
+            const menuBtn = document.getElementById('MENU');
+            menuBtn.addEventListener('click', () => {
+                clear(content)
+                menu()
+            });
+
+            const menuArray = document.querySelectorAll('.menu-item');
+            buttonsToggle(menuArray, 'menu-item-active');
+        },
+
+        homePage() {
+            clear(content);
+            home();
+        },
+
+        date() {
+            const timeId = document.getElementById('date-text');
+            const currentTime = (() => {
+                let date = new Date();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let year = date.getFullYear();
+                let hh = date.getHours();
+                let mm = date.getMinutes();
+                timeId.innerText = `${month}-${day}-${year}, ${hh}:${mm}`
+                let t = setTimeout(() => currentTime(), 60000);
+            })();
+        }
+    }
+
+    return {load};
 })();
 
 export default UI;

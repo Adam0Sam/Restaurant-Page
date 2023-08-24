@@ -389,10 +389,9 @@ main{
 .food-content{
     height: 620px;
     display: grid;
-    grid-template-columns: repeat(4, minmax(225px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     padding: 42px 24px 0 24px;
     row-gap: 5%;
-    column-gap: 1fr;
 }
 .food-footer{
     height: 82px;

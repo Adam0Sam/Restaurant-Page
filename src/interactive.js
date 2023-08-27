@@ -1,5 +1,5 @@
 const menuObject = (oldName, category, spiciness, imgLink) => {
-    let name = oldName.toUpperCase(); // Private variable to store uppercase name
+    let name = oldName.toUpperCase();
 
     return {
         name,

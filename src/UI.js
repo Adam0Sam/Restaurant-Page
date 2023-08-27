@@ -76,58 +76,79 @@ const UI = (() => {
         const selectionBtnClicked = () => {
             const button = document.getElementById("selection-btn");
             button.addEventListener('click', () => {
-                document.querySelector('.table-order').innerText = document.querySelector('.table-selection').innerText;
+                const tableId = document.querySelector('.table-selection').innerText;
+                if(tableId==='not selected'){
+                    alert('Select a table.');
+                    return ;
+                } 
+                document.querySelector('.table-order').innerText = tableId
+                document.getElementById('MENU').click();
             });
         };
 
 
         clear(content);
 
-        const nameTop = document.createElement('div');
-        nameTop.classList.add('name-top');
+        const nameTop = createDiv('name-top');
         loadNameTop();
 
-        const tables = document.createElement('div');
-        tables.classList.add('tables');
-        const selection = document.createElement('div');
-        selection.classList.add('selection');
+        const tables = createDiv('tables');
+        const selection = createDiv('selection');
         loadTables(0);
     };
 
     const menu = () => {
 
-        const menuItems = {
-            item1: menuObject("chicken wings", "N", 2, "./images/chickenWing.jpg"),
-            item2: menuObject("french fries", "G", 0, "./images/frenchFry.jpg"),
-            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
-            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
-            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg"),
-            item6: menuObject("bread", "G", 2, "./images/ikBread.jpg"),
-            item7: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
-            item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
-            item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg")
-        };
+        const menus = {
+            "STARTER": {
+                item1: menuObject("chicken wings", "N", 2, "./images/chickenWing.jpg"),
+                item2: menuObject("french fries", "G", 0, "./images/frenchFry.jpg"),
+                item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
+                item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg"),
+                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
+                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
+                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg")
+            },
+            "MAIN COURSE": {
+                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
+                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
+                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg")
+            },
+            "DRINKS": {
+                item6: menuObject("bread", "G", 2, "./images/ikBread.jpg"),
+                item7: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
+                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
+                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
+                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg"),
+            },
+            "DESSERTS": {
+                item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
+                item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg"),
+                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
+                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
+            }
+        }
 
-        const loadFoodContent = () => {
-            for (let item in menuItems) {
-                const foodItemContainer = document.createElement('div');
-                foodItemContainer.classList.add('food-item-container');
+        const loadFoodContent = (selectedMenuName = "STARTER") => {
+            const selectedMenu = menus[selectedMenuName];
+            for (let item in selectedMenu) {
+                const foodItemContainer = createDiv('food-item-container');
 
                 let spicyIcons = ``;
-                for (let i = 0; i < menuItems[item].spiciness; i++) {
+                for (let i = 0; i < selectedMenu[item].spiciness; i++) {
                     spicyIcons += `<img src="./images/chilli.svg">`
                 }
 
                 foodItemContainer.innerHTML =
                     `<div class="food-card">
                         <div class="food-img">
-                            <img src="${menuItems[item].imgLink}">
+                            <img src="${selectedMenu[item].imgLink}">
                         </div>
                         <div class="food-info">
-                            <p class="food-name">${menuItems[item].name}</p>
+                            <p class="food-name">${selectedMenu[item].name}</p>
                             <div class="food-category-container">
                                 <p class="food-category-text">CATEGORY:</p>
-                                <div class="food-category-icons">${menuItems[item].category}
+                                <div class="food-category-icons">${selectedMenu[item].category}
                                     <div>
                                         ${spicyIcons}
                                     </div>
@@ -141,17 +162,40 @@ const UI = (() => {
         };
 
         const loadFoodFooter = () => {
-
+            const footerBtns = ["STARTER", "MAIN COURSE", "DRINKS", "DESSERTS"];
+            for (let btn in footerBtns) {
+                const footerBtn = document.createElement('button');
+                footerBtn.classList.add('food-footer-btn');
+                if (footerBtns[btn] === "STARTER") footerBtn.classList.add('food-footer-btn-active');
+                footerBtn.innerText = footerBtns[btn];
+                foodFooter.appendChild(footerBtn);
+            }
+            const loadSelectedMenu = (item) => {
+                clear(foodContent);
+                loadFoodContent(item.innerText);
+            }
+            buttonsToggle(document.querySelectorAll('.food-footer-btn'), 'food-footer-btn-active', loadSelectedMenu);
         };
 
-        const foodContent = document.createElement('div');
-        foodContent.classList.add('food-content');
+        const foodContent = createDiv('food-content');
         content.appendChild(foodContent);
         loadFoodContent();
+
+        const foodFooter = createDiv('food-footer');
+        content.appendChild(foodFooter);
+        loadFoodFooter();
     }
 
     const payment = () => {
-        clear();
+        document.querySelectorAll('body').innerText = 'payment:)'
+    };
+
+    const orders = () => {
+        document.querySelectorAll('body').innerText = 'orders:)'
+    }
+
+    const settings = () => {
+        document.querySelectorAll('body').innerText = 'settings:)'
     }
 
     const buttonsToggle = (nodelist, toggleClass, additionalFunction) => {
@@ -159,7 +203,7 @@ const UI = (() => {
         list.forEach(item => item.addEventListener('click', () => {
             list.forEach(item => item.classList.remove(toggleClass));
             item.classList.add(toggleClass);
-            additionalFunction(item);
+            if (typeof additionalFunction !== 'undefined') additionalFunction(item);
         }));
     };
 
@@ -169,22 +213,27 @@ const UI = (() => {
         }
     };
 
+    const createDiv = (divClass) => {
+        const div = document.createElement('div');
+        div.classList.add(divClass);
+        return div;
+    };
+
     const load = {
         menuBtns() {
-            const homeBtn = document.getElementById('HOME');
-            homeBtn.addEventListener('click', () => {
-                clear(content)
-                home()
-            });
-
-            const menuBtn = document.getElementById('MENU');
-            menuBtn.addEventListener('click', () => {
-                clear(content)
-                menu()
-            });
-
             const menuArray = document.querySelectorAll('.menu-item');
-            buttonsToggle(menuArray, 'menu-item-active');
+            const loadSelectedMenu = (item) => {
+                const functionMap = {
+                    "HOME": home,
+                    "MENU": menu,
+                    "PAYMENT": payment,
+                    "ORDERS": orders,
+                    "SETTINGS": settings
+                }
+                clear(content)
+                functionMap[item.id]();
+            }
+            buttonsToggle(menuArray, 'menu-item-active', loadSelectedMenu);
         },
 
         homePage() {
@@ -194,20 +243,22 @@ const UI = (() => {
 
         date() {
             const timeId = document.getElementById('date-text');
-            const currentTime = (() => {
+            const currentTime = () => {
                 let date = new Date();
                 let month = date.getMonth() + 1;
+                if (month < 10) month = "0" + month.toString();
                 let day = date.getDate();
                 let year = date.getFullYear();
                 let hh = date.getHours();
                 let mm = date.getMinutes();
-                timeId.innerText = `${month}-${day}-${year}, ${hh}:${mm}`
-                let t = setTimeout(() => currentTime(), 60000);
-            })();
+                timeId.innerText = `${month}-${day}-${year}, ${hh}:${mm}`;
+            };
+            currentTime();
+            let t = setInterval(() => currentTime(), 1000);
         }
     }
 
-    return {load};
+    return { load };
 })();
 
 export default UI;

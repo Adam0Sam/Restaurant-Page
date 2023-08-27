@@ -390,14 +390,19 @@ main{
     height: 620px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-auto-rows: 204px;
     padding: 42px 24px 0 24px;
     row-gap: 5%;
+    overflow: auto;
 }
 .food-footer{
     height: 82px;
     display: flex;
     justify-content: space-between;
+    gap: 5%;
     padding: 22px;
+    background-color: var(--actions-extra-light-blue);
+    overflow: auto;
 }
 
 .food-footer-btn{
@@ -407,6 +412,13 @@ main{
     font-size: 16px;
     font-family: 500;
     color: var(--actions-extras-unactive-text-color);
+    cursor: pointer;
+    border-radius: var(--border-radius);
+}
+
+.food-footer-btn-active{
+    background-color: var(--green-title);
+    color: var(--blue-50);
 }
 
 .food-item-container{

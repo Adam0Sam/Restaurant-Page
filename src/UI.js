@@ -241,42 +241,56 @@ const UI = (() => {
             const loadOrderItem = () => {
                 console.log("ADDED");
                 totalPrice += price;
-                const orderItem = createDiv('order-item');
-                orderItem.dataset.id = id;
-                orderItem.innerHTML = `
-                <div class="order-item-content">
-                    <img src="${imgLink}" alt="">
-                    <div class="order-item-content-info">
-                        <p class="order-item-text">${name}</p>
-                        <p class="order-item-content-price">$${price}</p>
+                const orderItemBg = createDiv('background-blur');
+                orderItemBg.dataset.id = id;
+                orderItemBg.innerHTML = `
+                <div class="order-item">
+                    <div class="order-item-content">
+                        <img src="${imgLink}" alt="">
+                        <div class="order-item-content-info">
+                            <p class="order-item-text">${name}</p>
+                            <p class="order-item-content-price">$${price}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="order-item-quantity">
-                    <p class="order-item-text">QUANTITY</p>
-                    <p class="order-item-quantity-text">${quantityCount[id]}</p>
+                    <div class="order-item-quantity">
+                        <p class="order-item-text">QUANTITY</p>
+                        <p class="order-item-quantity-text">${quantityCount[id]}</p>
+                    </div>
                 </div>
                 <button class="order-remove">REMOVE</button>
                 `;
-                orderItems.appendChild(orderItem);
+                orderItems.appendChild(orderItemBg);
                 loadOrderPrice();
 
-                //I was unable to find a css solution for the orderItem to be blurred when hovering over the removeBtn
-                // const blurOrderItemWhileHoveringOverRemove
 
-                const revealRemoveBtn = (orderItem) => {
-                    orderItem.querySelector('.order-remove').classList.add('order-remove-visible');
-                    console.log("visible");
-                };
-                const hideRemoveBtn = (orderItem) => {
-                    orderItem.querySelector('.order-remove').classList.remove('order-remove-visible');
-                    console.log("invisible");
-                };
+                const enableRemovBtnEffects = (() => {
+                    const removeBtn = orderItemBg.querySelector('.order-remove');
+                    //I was unable to find a css solution for the orderItem to be blurred when hovering over the removeBtn
+                    const blurOrderItemWhileHoveringOverRemoveBtn = (() => {
+                        const orderItemContentClasslist = orderItemBg.querySelector('.order-item').classList;
 
-                orderItem.addEventListener('mouseenter', () => revealRemoveBtn(orderItem))
-                orderItem.addEventListener('focus', () => revealRemoveBtn(orderItem));
+                        removeBtn.addEventListener('mouseenter', () =>
+                            orderItemContentClasslist.add('order-item-blurred'));
+                        removeBtn.addEventListener('mouseleave', () =>
+                            orderItemContentClasslist.remove('order-item-blurred'));
+                    })();
 
-                orderItem.addEventListener('mouseleave', () => hideRemoveBtn(orderItem));
-                orderItem.addEventListener('focusout', () => hideRemoveBtn(orderItem));
+                    const revealRemoveBtn = () => {
+                        removeBtn.classList.add('order-remove-visible');
+                        console.log("visible");
+                    };
+                    const hideRemoveBtn = () => {
+                        removeBtn.classList.remove('order-remove-visible');
+                        console.log("invisible");
+                    };
+
+                    orderItemBg.addEventListener('mouseenter', () => revealRemoveBtn())
+                    orderItemBg.addEventListener('focus', () => revealRemoveBtn());
+
+                    orderItemBg.addEventListener('mouseleave', () => hideRemoveBtn());
+                    orderItemBg.addEventListener('focusout', () => hideRemoveBtn());
+                })();
+
             };
 
             const loadOrderPrice = () => {
@@ -306,6 +320,10 @@ const UI = (() => {
 
                 document.querySelector('.order-cancel').addEventListener('click', () => {
                     clear(orderContent);
+                    clear(orderItems);
+                    clear(orderPrice);
+                    totalPrice = 0;
+                    quantityCount = {};
                     load.orderEmpty();
                     console.log("cleared");
                 });

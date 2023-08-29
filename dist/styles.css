@@ -292,8 +292,11 @@ main{
     margin-bottom: 20px;
 }
 
-.order-item{
+.background-blur{
     position: relative;
+}
+
+.order-item{
     height: 84px;
     border-radius: 14px;
     padding: 10px 15px;
@@ -442,8 +445,8 @@ button.order-send:focus{
 }
 
 .order-item:hover,
-.order-item:focus{
-    z-index: 0;
+.order-item:focus,
+.order-item-blurred{
     -webkit-filter: blur(2px);
     filter: blur(2px);
 }
@@ -563,6 +566,7 @@ button.order-send:focus{
     align-items: center;
     justify-content: space-between;
     margin: 0 25px;
+    margin-bottom: 10px;
     padding-top: 36px;
     border-top: var(--seperating-border);
 }

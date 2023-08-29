@@ -85,6 +85,10 @@ body {
     font-family: 'Quicksand', sans-serif;
 }
 
+button{
+    all: unset;
+}
+
 /* NAV */
 nav {
     height: var(--nav-height);
@@ -134,12 +138,8 @@ nav {
     background-color: var(--blue-50);
 }
 
-#search-bar>input,
-#search-bar>button {
-    all: unset;
-}
-
 #search-bar>input {
+    all: unset;
     display: flex;
     flex: 1;
 }
@@ -173,7 +173,6 @@ nav {
 }
 
 #add-table{ 
-    all: unset;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -294,6 +293,7 @@ main{
 }
 
 .order-item{
+    position: relative;
     height: 84px;
     border-radius: 14px;
     padding: 10px 15px;
@@ -395,7 +395,6 @@ main{
 }
 
 .order-content-price-interact-buttons>button{
-    all: unset;
     font-size: 16px;
     font-weight: 500;
     border-radius: 10px;
@@ -418,6 +417,42 @@ button.order-send:focus{
     background-color: var(--blue-200-focus);
 }
 
+.order-remove{
+    position: absolute;
+    z-index: 1;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--actions-extras-warning);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 16px;
+    font-weight: 600;
+    padding: 20px 30px;
+
+    background-color: var(--actions-extras-warning);
+    color: var(--actions-extra-light-blue);
+
+    opacity: 0;
+}
+
+.order-item:hover,
+.order-item:focus{
+    z-index: 0;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+}
+
+.order-remove-visible{
+    opacity: 1;
+    -webkit-filter: blur(0);
+    filter: blur(0);
+}
 
 /* TABLE ICON AND TEXT */
 .table-text{
@@ -466,7 +501,6 @@ button.order-send:focus{
 }
 
 .floor-btn{
-    all: unset;
     border-radius: var(--border-radius);
     background-color: var(--actions-extra-light-gray);
     cursor: pointer;
@@ -570,7 +604,6 @@ button.order-send:focus{
 }
 
 .food-footer-btn{
-    all: unset;
     padding: 19px 44px;
     background: var(--actions-extras-unactive-btn);
     font-size: 16px;

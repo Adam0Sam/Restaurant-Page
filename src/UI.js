@@ -234,6 +234,10 @@ const UI = (() => {
                 orderContent.appendChild(orderPrice);
             }
 
+            const removeOrderItem = (item) => {
+                console.log(item);
+            }
+
             const loadOrderItem = () => {
                 console.log("ADDED");
                 totalPrice += price;
@@ -251,9 +255,28 @@ const UI = (() => {
                     <p class="order-item-text">QUANTITY</p>
                     <p class="order-item-quantity-text">${quantityCount[id]}</p>
                 </div>
+                <button class="order-remove">REMOVE</button>
                 `;
                 orderItems.appendChild(orderItem);
-                loadOrderPrice()
+                loadOrderPrice();
+
+                //I was unable to find a css solution for the orderItem to be blurred when hovering over the removeBtn
+                // const blurOrderItemWhileHoveringOverRemove
+
+                const revealRemoveBtn = (orderItem) => {
+                    orderItem.querySelector('.order-remove').classList.add('order-remove-visible');
+                    console.log("visible");
+                };
+                const hideRemoveBtn = (orderItem) => {
+                    orderItem.querySelector('.order-remove').classList.remove('order-remove-visible');
+                    console.log("invisible");
+                };
+
+                orderItem.addEventListener('mouseenter', () => revealRemoveBtn(orderItem))
+                orderItem.addEventListener('focus', () => revealRemoveBtn(orderItem));
+
+                orderItem.addEventListener('mouseleave', () => hideRemoveBtn(orderItem));
+                orderItem.addEventListener('focusout', () => hideRemoveBtn(orderItem));
             };
 
             const loadOrderPrice = () => {

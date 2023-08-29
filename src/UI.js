@@ -234,12 +234,6 @@ const UI = (() => {
                 orderContent.appendChild(orderPrice);
             }
 
-            if (!(quantityCount[id])) quantityCount[id] = 1;
-            else {
-                quantityCount[id]++;
-                orderItems.removeChild(document.querySelector(`[data-id=${selectedItem.dataset.menuItem}]`))
-            }
-
             const loadOrderItem = () => {
                 console.log("ADDED");
                 totalPrice += price;
@@ -259,11 +253,11 @@ const UI = (() => {
                 </div>
                 `;
                 orderItems.appendChild(orderItem);
+                loadOrderPrice()
             };
 
-            loadOrderItem();
             const loadOrderPrice = () => {
-                const surcharge = +((totalPrice*0.1).toFixed(2));
+                const surcharge = +((totalPrice * 0.1).toFixed(2));
                 orderPrice.innerHTML = `
                 <div class="order-content-price-info">
                     <div>
@@ -287,9 +281,25 @@ const UI = (() => {
                 </div>
                 `;
 
+                document.querySelector('.order-cancel').addEventListener('click', () => {
+                    clear(orderContent);
+                    load.orderEmpty();
+                    console.log("cleared");
+                });
             };
 
-            loadOrderPrice();
+            if (!(quantityCount[id])) {
+                quantityCount[id] = 1;
+                loadOrderItem();
+            }
+            else {
+                quantityCount[id]++;
+                totalPrice += price;
+                document.querySelector(`[data-id=${selectedItem.dataset.menuItem}]`)
+                    .querySelector('.order-item-quantity-text').innerText = quantityCount[id];
+                loadOrderPrice();
+            }
+
         }
 
         return { loadOrder }

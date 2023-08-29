@@ -3,6 +3,27 @@ import { menuObject } from "./interactive";
 const UI = (() => {
     const content = document.querySelector('.content');
 
+    const buttonsToggle = (nodelist, toggleClass, additionalFunction) => {
+        const list = Array.from(nodelist); // for some reason I need to convert the nodelist into an array within the function itself
+        list.forEach(item => item.addEventListener('click', () => {
+            list.forEach(item => item.classList.remove(toggleClass));
+            item.classList.add(toggleClass);
+            if (typeof additionalFunction !== 'undefined') additionalFunction(item);
+        }));
+    };
+
+    const clear = (element) => {
+        while (element.lastChild) {
+            element.lastChild.remove();
+        }
+    };
+
+    const createDiv = (divClass) => {
+        const div = document.createElement('div');
+        div.classList.add(divClass);
+        return div;
+    };
+
     const home = () => {
         const loadNameTop = () => {
             nameTop.innerHTML =
@@ -77,10 +98,10 @@ const UI = (() => {
             const button = document.getElementById("selection-btn");
             button.addEventListener('click', () => {
                 const tableId = document.querySelector('.table-selection').innerText;
-                if(tableId==='not selected'){
+                if (tableId === 'not selected') {
                     alert('Select a table.');
-                    return ;
-                } 
+                    return;
+                }
                 document.querySelector('.table-order').innerText = tableId
                 document.getElementById('MENU').click();
             });
@@ -97,40 +118,39 @@ const UI = (() => {
         loadTables(0);
     };
 
-    const menu = () => {
-
-        const menus = {
-            "STARTER": {
-                item1: menuObject("chicken wings", "N", 2, "./images/chickenWing.jpg"),
-                item2: menuObject("french fries", "G", 0, "./images/frenchFry.jpg"),
-                item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
-                item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg"),
-                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
-                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
-                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg")
-            },
-            "MAIN COURSE": {
-                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
-                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
-                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg")
-            },
-            "DRINKS": {
-                item6: menuObject("bread", "G", 2, "./images/ikBread.jpg"),
-                item7: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
-                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
-                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
-                item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg"),
-            },
-            "DESSERTS": {
-                item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg"),
-                item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg"),
-                item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg"),
-                item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg"),
-            }
+    const menusList = {
+        "STARTER": {
+            item1: menuObject("chicken wings", "N", 2, "./images/chickenWing.jpg", 23),
+            item2: menuObject("french fries", "G", 0, "./images/frenchFry.jpg", 23),
+            item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg", 23),
+            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 19)
+        },
+        "MAIN COURSE": {
+            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 23)
+        },
+        "DRINKS": {
+            item6: menuObject("bread", "G", 2, "./images/ikBread.jpg", 23),
+            item7: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 23),
+        },
+        "DESSERTS": {
+            item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg", 23),
+            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
         }
+    }
 
+    const menu = () => {
         const loadFoodContent = (selectedMenuName = "STARTER") => {
-            const selectedMenu = menus[selectedMenuName];
+            const selectedMenu = menusList[selectedMenuName];
             for (let item in selectedMenu) {
                 const foodItemContainer = createDiv('food-item-container');
 
@@ -140,7 +160,7 @@ const UI = (() => {
                 }
 
                 foodItemContainer.innerHTML =
-                    `<div class="food-card">
+                    `<div class="food-card" data-menu-list="${selectedMenuName}" data-menu-item="${item}">
                         <div class="food-img">
                             <img src="${selectedMenu[item].imgLink}">
                         </div>
@@ -159,6 +179,12 @@ const UI = (() => {
                 foodContent.appendChild(foodItemContainer);
             }
 
+            const foodCardClicked = (() => {
+                document.querySelectorAll('.food-card')
+                    .forEach(card => {
+                        card.addEventListener('click', () => orderAside.loadOrder(card));
+                    });
+            })();
         };
 
         const loadFoodFooter = () => {
@@ -184,7 +210,68 @@ const UI = (() => {
         const foodFooter = createDiv('food-footer');
         content.appendChild(foodFooter);
         loadFoodFooter();
-    }
+    };
+
+    const orderAside = (() => {
+        const orderContent = document.querySelector('.order-content');
+        const orderItems = createDiv('order-content-items');
+        const orderPrice = createDiv('order-content-price');
+
+        const quantityCount = {};
+        const totalPrice = 0;
+        
+        const loadOrder = (selectedItem) => {
+            const selectedObj = menusList[selectedItem.dataset.menuList][selectedItem.dataset.menuItem];
+            const name = selectedObj.name;
+            const price = selectedObj.price;
+            const imgLink = selectedObj.imgLink;
+
+            checkIfOrderIsEmpty();
+
+            if(!(quantityCount[name])) quantityCount[name]=1;
+            else{
+                quantityCount[name]++;
+                orderItems.removeChild(document.querySelector(`[data-name=${selectedItem.dataset.menuItem}]`))
+            } 
+            
+            const loadOrderItem = () => {
+                console.log("ADDED");
+                const orderItem = createDiv('order-item');
+                orderItem.dataset.name=selectedItem.dataset.menuItem;
+                orderItem.innerHTML = `
+                <div class="order-item-content">
+                    <img src="${imgLink}" alt="">
+                    <div class="order-item-content-info">
+                        <p class="order-item-text">${name}</p>
+                        <p class="order-item-content-price">$${price}</p>
+                    </div>
+                </div>
+                <div class="order-item-quantity">
+                    <p class="order-item-text">QUANTITY</p>
+                    <p class="order-item-quantity-text">${quantityCount[name]}</p>
+                </div>
+                `;
+                orderItems.appendChild(orderItem);
+            };
+
+            loadOrderItem();
+            const loadOrderPrice = () => {
+            };
+            
+            loadOrderPrice();
+        }
+
+        const checkIfOrderIsEmpty = () => {
+            if(document.querySelector('.order-content-empty')){
+                // console.log(document.querySelector('.order-content-empty'));
+                clear(orderContent);
+                orderContent.appendChild(orderItems);
+                orderContent.appendChild(orderPrice);
+            }
+        };
+
+        return { loadOrder }
+    })();
 
     const payment = () => {
         document.querySelectorAll('body').innerText = 'payment:)'
@@ -197,27 +284,6 @@ const UI = (() => {
     const settings = () => {
         document.querySelectorAll('body').innerText = 'settings:)'
     }
-
-    const buttonsToggle = (nodelist, toggleClass, additionalFunction) => {
-        const list = Array.from(nodelist); // for some reason I need to convert the nodelist into an array within the function itself
-        list.forEach(item => item.addEventListener('click', () => {
-            list.forEach(item => item.classList.remove(toggleClass));
-            item.classList.add(toggleClass);
-            if (typeof additionalFunction !== 'undefined') additionalFunction(item);
-        }));
-    };
-
-    const clear = (element) => {
-        while (element.lastChild) {
-            element.lastChild.remove();
-        }
-    };
-
-    const createDiv = (divClass) => {
-        const div = document.createElement('div');
-        div.classList.add(divClass);
-        return div;
-    };
 
     const load = {
         menuBtns() {
@@ -239,6 +305,16 @@ const UI = (() => {
         homePage() {
             clear(content);
             home();
+        },
+
+        orderEmpty() {
+            const orderContent = document.querySelector('.order-content')
+            const orderEmpty = createDiv('order-content-empty');
+            orderEmpty.innerHTML = `
+                <img src="images/order.svg" alt="">
+                <p class="order-empty-text">NO PRODUCTS ADDED</p>
+                `;
+            orderContent.appendChild(orderEmpty);
         },
 
         date() {

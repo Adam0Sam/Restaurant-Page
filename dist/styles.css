@@ -71,6 +71,9 @@ table {
     --actions-extra-light-blue: #EAF0F0;
     --actions-extras-unactive-btn: #D9D9D9;
     --actions-extras-unactive-text-color: #A9A9A9;
+
+    --top-order-height: 96px;
+    --nav-height: 80px;
 }
 
 html,
@@ -81,7 +84,7 @@ body {
 
 /* NAV */
 nav {
-    height: 80px;
+    height: var(--nav-height);
     padding: 0 20px;
     display: flex;
     justify-content: space-between;
@@ -186,14 +189,14 @@ nav {
 
 /* MENU */
 main{
-    height: 100%;
+    height: calc(100% - var(--nav-height) - 1px);
     display: flex;
 }
 
 .menu{
     flex-shrink: 0;
     width: 100px;
-    height: 100%;
+    height: auto;
     text-align: center;
     padding-top: 30px;
     border-right: var(--seperating-border);
@@ -227,13 +230,13 @@ main{
 
 /* ORDER */
 .order{
-    width: 400px;
+    width: 430px;
     border-left: var(--seperating-border);
     overflow: auto;
 }
 
 .top-order{
-    height: 96px;
+    height: var(--top-order-height);
     margin: 25px;
     border-bottom: var(--seperating-border-dashed);
 }
@@ -256,6 +259,92 @@ main{
     align-items: center;
 }
 
+.order-content{
+    box-sizing: border-box;
+    height: calc(100% - var(--top-order-height) - 51px);
+    padding: 0 25px 8% 25px;
+    color: #000;
+}
+
+.order-content-empty{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.order-empty-text{
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 60px;
+}
+
+.order-content-items{
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: auto;
+}
+
+.order-item{
+    height: 84px;
+    border-radius: 14px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--actions-extra-light-blue);
+}
+
+.order-item-text{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.order-item-content{
+    display: flex;
+    gap: 20px;
+}
+.order-item-content>img{
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+.order-item-content-price{
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.order-item-quantity,
+.order-item-content-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 3px;
+    align-items: flex-start;
+}
+
+.order-item-quantity{
+    height: 65px;
+    align-items: center;
+}
+.order-item-quantity-text{
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.order-content-price{
+    height: 50%;
+    border: 1px dashed var(--actions-extras-unactive-text-color);
+    border-radius: 14px 14px 0 0;
+    border-color: var(--actions-extra-light-gray);
+}
+
+
 /* TABLE ICON AND TEXT */
 .table-text{
     font-size: 15px;
@@ -275,6 +364,7 @@ main{
     display: flex;
     flex: 1;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 /* TABLES */
@@ -398,7 +488,7 @@ main{
 .food-footer{
     height: 82px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: 5%;
     padding: 22px;
     background-color: var(--actions-extra-light-blue);
@@ -472,7 +562,4 @@ main{
 .food-category-icons{
     display: flex;
     gap: 12px;
-}
-.food-spiciness{
-
 }

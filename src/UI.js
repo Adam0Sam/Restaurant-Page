@@ -217,27 +217,34 @@ const UI = (() => {
         const orderItems = createDiv('order-content-items');
         const orderPrice = createDiv('order-content-price');
 
-        const quantityCount = {};
-        const totalPrice = 0;
-        
+        let quantityCount = {};
+        let totalPrice = 0;
+
         const loadOrder = (selectedItem) => {
             const selectedObj = menusList[selectedItem.dataset.menuList][selectedItem.dataset.menuItem];
+            const id = selectedItem.dataset.menuItem;
             const name = selectedObj.name;
             const price = selectedObj.price;
             const imgLink = selectedObj.imgLink;
 
-            checkIfOrderIsEmpty();
+            if (document.querySelector('.order-content-empty')) {
+                // console.log(document.querySelector('.order-content-empty'));
+                clear(orderContent);
+                orderContent.appendChild(orderItems);
+                orderContent.appendChild(orderPrice);
+            }
 
-            if(!(quantityCount[name])) quantityCount[name]=1;
-            else{
-                quantityCount[name]++;
-                orderItems.removeChild(document.querySelector(`[data-name=${selectedItem.dataset.menuItem}]`))
-            } 
-            
+            if (!(quantityCount[id])) quantityCount[id] = 1;
+            else {
+                quantityCount[id]++;
+                orderItems.removeChild(document.querySelector(`[data-id=${selectedItem.dataset.menuItem}]`))
+            }
+
             const loadOrderItem = () => {
                 console.log("ADDED");
+                totalPrice += price;
                 const orderItem = createDiv('order-item');
-                orderItem.dataset.name=selectedItem.dataset.menuItem;
+                orderItem.dataset.id = id;
                 orderItem.innerHTML = `
                 <div class="order-item-content">
                     <img src="${imgLink}" alt="">
@@ -248,7 +255,7 @@ const UI = (() => {
                 </div>
                 <div class="order-item-quantity">
                     <p class="order-item-text">QUANTITY</p>
-                    <p class="order-item-quantity-text">${quantityCount[name]}</p>
+                    <p class="order-item-quantity-text">${quantityCount[id]}</p>
                 </div>
                 `;
                 orderItems.appendChild(orderItem);
@@ -256,19 +263,34 @@ const UI = (() => {
 
             loadOrderItem();
             const loadOrderPrice = () => {
+                const surcharge = +((totalPrice*0.1).toFixed(2));
+                orderPrice.innerHTML = `
+                <div class="order-content-price-info">
+                    <div>
+                        <p class="order-content-price-info-text">SUBTOTAL</p>
+                        <p class="order-content-price-info-text">${totalPrice}</p>
+                    </div>
+                    <div>
+                        <p class="order-content-price-info-text">SERVICE CHARGE <span class="order-content-price-info-surcharge">10%</span></p>
+                        <p class="order-content-price-info-text">${surcharge}</p>
+                    </div>
+                </div>
+                <div class="order-content-price-interact">
+                    <div class="order-content-price-interact-info">
+                        <p class="order-content-price-interact-info-text">TOTAL</p>
+                        <p class="order-content-price-interact-info-text">${totalPrice + surcharge}</p>
+                    </div>
+                    <div class="order-content-price-interact-buttons">
+                        <button class="order-cancel">CANCEL ORDER</button>
+                        <button class="order-send">SEND ORDER</button>
+                    </div>
+                </div>
+                `;
+
             };
-            
+
             loadOrderPrice();
         }
-
-        const checkIfOrderIsEmpty = () => {
-            if(document.querySelector('.order-content-empty')){
-                // console.log(document.querySelector('.order-content-empty'));
-                clear(orderContent);
-                orderContent.appendChild(orderItems);
-                orderContent.appendChild(orderPrice);
-            }
-        };
 
         return { loadOrder }
     })();

@@ -72,6 +72,9 @@ table {
     --actions-extras-unactive-btn: #D9D9D9;
     --actions-extras-unactive-text-color: #A9A9A9;
 
+    --actions-extras-warning: #EC5A5A;
+    --actions-extras-warning-focus: #d64f4f;
+
     --top-order-height: 96px;
     --nav-height: 80px;
 }
@@ -262,7 +265,7 @@ main{
 .order-content{
     box-sizing: border-box;
     height: calc(100% - var(--top-order-height) - 51px);
-    padding: 0 25px 8% 25px;
+    padding: 0 25px 5px 25px;
     color: #000;
 }
 
@@ -281,11 +284,13 @@ main{
 }
 
 .order-content-items{
+    box-sizing: border-box;
     height: 50%;
     display: flex;
     flex-direction: column;
     gap: 20px;
     overflow: auto;
+    margin-bottom: 20px;
 }
 
 .order-item{
@@ -338,10 +343,79 @@ main{
 }
 
 .order-content-price{
-    height: 50%;
-    border: 1px dashed var(--actions-extras-unactive-text-color);
+    box-sizing: border-box;
+    height: 45%;
+    border: var(--seperating-border-dashed);
     border-radius: 14px 14px 0 0;
-    border-color: var(--actions-extra-light-gray);
+    background-color: var(--actions-extra-light-gray);
+    padding: 25px;
+    overflow: auto;
+}
+
+.order-content-price-info{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding-bottom: 25px;
+    border-bottom: var(--seperating-border-dashed);
+}
+
+.order-content-price-info>div,
+.order-content-price-interact-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-content-price-info-text{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.order-content-price-info-surcharge{
+    font-weight: 700;
+    margin-left: 8px;
+}
+
+.order-content-price-interact{
+    padding-top: 19px;
+    display: flex;
+    flex-direction: column;
+    gap: 52px;
+}
+
+.order-content-price-interact-info-text{
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.order-content-price-interact-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.order-content-price-interact-buttons>button{
+    all: unset;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 18px 20px;
+    cursor: pointer;
+}
+
+button.order-cancel{
+    background-color: var(--actions-extras-warning);
+}
+button.order-cancel:hover,
+button.order-cancel:focus{
+    background-color: var(--actions-extras-warning-focus);
+}
+button.order-send{
+    background-color: var(--blue-200);
+}
+button.order-send:hover,
+button.order-send:focus{
+    background-color: var(--blue-200-focus);
 }
 
 

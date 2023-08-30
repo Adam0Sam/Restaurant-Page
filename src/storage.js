@@ -31,7 +31,11 @@ const storage = (() => {
     const session = (() => {
         let orderItemList = [];
         const log = () => {
-            orderItemList.forEach((listItem) => console.log(listItem));
+            console.log('starting log..');
+            orderItemList.forEach((listItem) => {
+                const id = listItem.match(/data-menu-item="([^"]+)"/);
+                console.log(id[1]);
+            });
         }
         const addOrderItem = (item) => {
             if (storageAvailable("sessionStorage")) {
@@ -40,9 +44,14 @@ const storage = (() => {
             }
         };
 
-        const removeOrderItem = (itemId) => {
+        const removeOrderItem = (targetId) => {
             if (storageAvailable('sessionStorage')) {
-                console.log(orderItemList);
+                // log();
+                orderItemList = orderItemList.filter(item => {
+                    const itemId = item.match(/data-menu-item="([^"]+)"/)[1];
+                    if(targetId!=itemId) return item;
+                });
+                console.log('removed');
                 updateOrderItemList();
             }
         };
@@ -65,7 +74,7 @@ const storage = (() => {
                         for (let item of itemList) {
                             const foodCardContainer = document.createElement('div');
                             foodCardContainer.innerHTML = item;
-                            UI.orderAside.loadOrder(foodCardContainer.firstChild);
+                            UI.orderAside.loadOrder(foodCardContainer.firstChild, true);
                         }
                     }
                 }

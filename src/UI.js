@@ -195,7 +195,7 @@ const UI = (() => {
             const foodCardClicked = (() => {
                 document.querySelectorAll('.food-card')
                     .forEach(card => {
-                        card.addEventListener('click', () => orderAside.loadOrder(card));
+                        card.addEventListener('click', () => orderAside.loadOrder(card, false));
                     });
             })();
         };
@@ -233,13 +233,16 @@ const UI = (() => {
         let quantityCount = {};
         let totalPrice = 0;
 
-        const loadOrder = (selectedCard) => {
+        const loadOrder = (selectedCard, loadedFromCache) => {
             const selectedObj = menusList[selectedCard.dataset.menuList][selectedCard.dataset.menuItem];
             const id = selectedCard.dataset.menuItem;
             const name = selectedObj.name;
             const price = selectedObj.price;
             const imgLink = selectedObj.imgLink;
-            storage.session.addOrderItem(selectedCard);
+
+            if (!loadedFromCache) {
+                storage.session.addOrderItem(selectedCard);
+            }
 
             if (document.querySelector('.order-content-empty')) {
                 clear(orderContent);
@@ -252,6 +255,8 @@ const UI = (() => {
                 totalPrice -= item.dataset.price * quantityCount[itemId];
                 delete quantityCount[itemId];
                 orderItems.removeChild(item);
+                storage.session.removeOrderItem(itemId);
+
                 if (document.querySelectorAll('.order-item').length == 0) {
                     clear(orderContent);
                     load.orderEmpty();

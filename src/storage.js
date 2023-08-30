@@ -30,7 +30,6 @@ const storage = (() => {
 
     const session = (() => {
         let orderItemList = [];
-        
         const log = () => {
             orderItemList.forEach((listItem) => console.log(listItem));
         }
@@ -41,11 +40,9 @@ const storage = (() => {
             }
         };
 
-        const removeOrderItem = (item) => {
+        const removeOrderItem = (itemId) => {
             if (storageAvailable('sessionStorage')) {
-                const itemToRemove = item.outerHTML;
-                orderItemList = orderItemList
-                    .filter(listItem => listItem !== itemToRemove);
+                console.log(orderItemList);
                 updateOrderItemList();
             }
         };
@@ -63,11 +60,13 @@ const storage = (() => {
         const loadOrderItemList = () => {
             if (storageAvailable('sessionStorage')) {
                 const itemList = JSON.parse(sessionStorage.getItem('orderItemList'));
-                if (itemList.length > 0) {
-                    for (let item of itemList) {
-                        const foodCardContainer = document.createElement('div');
-                        foodCardContainer.innerHTML = item;
-                        UI.orderAside.loadOrder(foodCardContainer.firstChild)
+                if(itemList != null){
+                    if (itemList.length > 0) {
+                        for (let item of itemList) {
+                            const foodCardContainer = document.createElement('div');
+                            foodCardContainer.innerHTML = item;
+                            UI.orderAside.loadOrder(foodCardContainer.firstChild);
+                        }
                     }
                 }
             }

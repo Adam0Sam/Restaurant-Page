@@ -239,6 +239,7 @@ const UI = (() => {
             const name = selectedObj.name;
             const price = selectedObj.price;
             const imgLink = selectedObj.imgLink;
+            storage.session.addOrderItem(selectedCard);
 
             if (document.querySelector('.order-content-empty')) {
                 clear(orderContent);
@@ -348,6 +349,7 @@ const UI = (() => {
                     quantityCount = {};
                     load.orderEmpty();
                     console.log("cleared");
+                    storage.session.removeAllOrderItems();
                 });
             };
 

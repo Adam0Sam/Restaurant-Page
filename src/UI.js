@@ -1,4 +1,4 @@
-import { menuObject } from "./interactive";
+import { menuObject } from "./storage";
 
 const UI = (() => {
     const content = document.querySelector('.content');
@@ -118,33 +118,46 @@ const UI = (() => {
         loadTables(0);
     };
 
+    const menuObjectFactory = (oldName, category, spiciness, imgLink, price) => {
+        let name = oldName.toUpperCase();
+
+        return {
+            name,
+            category,
+            spiciness,
+            imgLink,
+            price
+        };
+    };
+
     const menusList = {
+
         "STARTER": {
-            item1: menuObject("chicken wings", "N", 2, "./images/chickenWing.jpg", 23),
-            item2: menuObject("french fries", "G", 0, "./images/frenchFry.jpg", 23),
-            item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
-            item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg", 23),
-            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 19)
+            item1: menuObjectFactory("chicken wings", "N", 2, "./images/chickenWing.jpg", 23),
+            item2: menuObjectFactory("french fries", "G", 0, "./images/frenchFry.jpg", 23),
+            item8: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item9: menuObjectFactory("glass meat", "G", 1, "./images/idkBread.jpg", 23),
+            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 19)
         },
         "MAIN COURSE": {
-            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 23)
+            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23)
         },
         "DRINKS": {
-            item6: menuObject("bread", "G", 2, "./images/ikBread.jpg", 23),
-            item7: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
-            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObject("chicken wings", "G", 2, "./images/idkBread.jpg", 23),
+            item6: menuObjectFactory("bread", "G", 2, "./images/ikBread.jpg", 23),
+            item7: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23),
         },
         "DESSERTS": {
-            item8: menuObject("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
-            item9: menuObject("glass meat", "G", 1, "./images/idkBread.jpg", 23),
-            item3: menuObject("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObject("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item8: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item9: menuObjectFactory("glass meat", "G", 1, "./images/idkBread.jpg", 23),
+            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
         }
     }
 
@@ -228,21 +241,27 @@ const UI = (() => {
             const imgLink = selectedObj.imgLink;
 
             if (document.querySelector('.order-content-empty')) {
-                // console.log(document.querySelector('.order-content-empty'));
                 clear(orderContent);
                 orderContent.appendChild(orderItems);
                 orderContent.appendChild(orderPrice);
             }
 
             const removeOrderItem = (item) => {
-                console.log(item);
-            }
+                totalPrice -= item.dataset.price * quantityCount[item.dataset.id];
+                delete quantityCount[item.dataset.id];
+                orderItems.removeChild(item);
+                if (document.querySelectorAll('.order-item').length == 0) {
+                    clear(orderContent);
+                    load.orderEmpty();
+                }
+            };
 
             const loadOrderItem = () => {
                 console.log("ADDED");
                 totalPrice += price;
                 const orderItemBg = createDiv('background-blur');
                 orderItemBg.dataset.id = id;
+                orderItemBg.dataset.price = price;
                 orderItemBg.innerHTML = `
                 <div class="order-item">
                     <div class="order-item-content">
@@ -289,6 +308,10 @@ const UI = (() => {
 
                     orderItemBg.addEventListener('mouseleave', () => hideRemoveBtn());
                     orderItemBg.addEventListener('focusout', () => hideRemoveBtn());
+
+                    removeBtn.addEventListener('click', () => {
+                        removeOrderItem(orderItemBg);
+                    });
                 })();
 
             };

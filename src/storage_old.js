@@ -29,12 +29,17 @@ const storage = (() => {
     };
 
     const session = (() => {
+
         let orderItemList = [];
-        
+
         const log = () => {
-            orderItemList.forEach((listItem) => console.log(listItem));
+            for (const item of JSON.parse(sessionStorage.getItem('orderItemList'))) {
+                console.log(item);
+            }
         }
+
         const addOrderItem = (item) => {
+            console.log(item);
             if (storageAvailable("sessionStorage")) {
                 orderItemList.push(item.outerHTML);
                 updateOrderItemList();
@@ -43,9 +48,10 @@ const storage = (() => {
 
         const removeOrderItem = (item) => {
             if (storageAvailable('sessionStorage')) {
-                const itemToRemove = item.outerHTML;
-                orderItemList = orderItemList
-                    .filter(listItem => listItem !== itemToRemove);
+                console.log('REMOVEORDER');
+                orderItemList.forEach(listItem => {console.log(`list item: ${listItem}, main item: ${item.outerHTML}`);})
+                    // .filter(listItem => listItem !== item.outerHTML);
+                
                 updateOrderItemList();
             }
         };
@@ -56,25 +62,35 @@ const storage = (() => {
         };
 
         const updateOrderItemList = () => {
-            sessionStorage.setItem('orderItemList',
-                JSON.stringify(orderItemList));
+            sessionStorage.setItem('orderItemList', 
+            JSON.stringify(orderItemList));
+            console.log('updateOrderItemList');
+            log();
         };
 
         const loadOrderItemList = () => {
             if (storageAvailable('sessionStorage')) {
+                console.log(sessionStorage.getItem('orderItemList'));
                 const itemList = JSON.parse(sessionStorage.getItem('orderItemList'));
                 if (itemList.length > 0) {
                     for (let item of itemList) {
-                        const foodCardContainer = document.createElement('div');
-                        foodCardContainer.innerHTML = item;
-                        UI.orderAside.loadOrder(foodCardContainer.firstChild)
+                        const foodCard = document.createElement('div');
+                        foodCard.innerHTML = item;
+                        UI.orderAside.loadOrder(foodCard.firstChild)
+                        console.log(foodCard.firstChild);
                     }
                 }
+                console.log('loadOrderItemList');
+                log()
             }
+            // log()
         };
+        // updateOrderItemList();
 
-        return { addOrderItem, removeOrderItem, removeAllOrderItems, loadOrderItemList };
+        return { addOrderItem, removeOrderItem, removeAllOrderItems, loadOrderItemList }
     })();
+
     return { session };
 })();
+
 export default storage;

@@ -1,4 +1,4 @@
-import { menuObject } from "./storage";
+import storage from "./storage";
 
 const UI = (() => {
     const content = document.querySelector('.content');
@@ -130,28 +130,28 @@ const UI = (() => {
         };
     };
 
+    // const menusList = menuObject; - An object saved in localStorage
     const menusList = {
-
         "STARTER": {
             item1: menuObjectFactory("chicken wings", "N", 2, "./images/chickenWing.jpg", 23),
             item2: menuObjectFactory("french fries", "G", 0, "./images/frenchFry.jpg", 23),
-            item8: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
-            item9: menuObjectFactory("glass meat", "G", 1, "./images/idkBread.jpg", 23),
-            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 19)
+            item3: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item4: menuObjectFactory("glass meat", "G", 1, "./images/idkBread.jpg", 23),
+            item5: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item7: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item6: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 19)
         },
         "MAIN COURSE": {
-            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23)
+            item8: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item9: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item10: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23)
         },
         "DRINKS": {
-            item6: menuObjectFactory("bread", "G", 2, "./images/ikBread.jpg", 23),
-            item7: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
-            item3: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
-            item4: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
-            item5: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23),
+            item11: menuObjectFactory("bread", "G", 2, "./images/ikBread.jpg", 23),
+            item12: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
+            item13: menuObjectFactory("summer salad", "N", 1, "./images/summerSalad.jpg", 23),
+            item14: menuObjectFactory("summer salad", "0%", 1, "./images/summerSalad.jpg", 23),
+            item15: menuObjectFactory("chicken wings", "G", 2, "./images/idkBread.jpg", 23),
         },
         "DESSERTS": {
             item8: menuObjectFactory("glass meat", "G", 2, "./images/glassMeat.jpg", 23),
@@ -166,22 +166,22 @@ const UI = (() => {
             const selectedMenu = menusList[selectedMenuName];
             for (let item in selectedMenu) {
                 const foodItemContainer = createDiv('food-item-container');
-
+                const menuItem = selectedMenu[item];
                 let spicyIcons = ``;
-                for (let i = 0; i < selectedMenu[item].spiciness; i++) {
+                for (let i = 0; i < menuItem.spiciness; i++) {
                     spicyIcons += `<img src="./images/chilli.svg">`
                 }
 
                 foodItemContainer.innerHTML =
                     `<div class="food-card" data-menu-list="${selectedMenuName}" data-menu-item="${item}">
                         <div class="food-img">
-                            <img src="${selectedMenu[item].imgLink}">
+                            <img src="${menuItem.imgLink}">
                         </div>
                         <div class="food-info">
-                            <p class="food-name">${selectedMenu[item].name}</p>
+                            <p class="food-name">${menuItem.name}</p>
                             <div class="food-category-container">
                                 <p class="food-category-text">CATEGORY:</p>
-                                <div class="food-category-icons">${selectedMenu[item].category}
+                                <div class="food-category-icons">${menuItem.category}
                                     <div>
                                         ${spicyIcons}
                                     </div>
@@ -233,9 +233,9 @@ const UI = (() => {
         let quantityCount = {};
         let totalPrice = 0;
 
-        const loadOrder = (selectedItem) => {
-            const selectedObj = menusList[selectedItem.dataset.menuList][selectedItem.dataset.menuItem];
-            const id = selectedItem.dataset.menuItem;
+        const loadOrder = (selectedCard) => {
+            const selectedObj = menusList[selectedCard.dataset.menuList][selectedCard.dataset.menuItem];
+            const id = selectedCard.dataset.menuItem;
             const name = selectedObj.name;
             const price = selectedObj.price;
             const imgLink = selectedObj.imgLink;
@@ -247,8 +247,9 @@ const UI = (() => {
             }
 
             const removeOrderItem = (item) => {
-                totalPrice -= item.dataset.price * quantityCount[item.dataset.id];
-                delete quantityCount[item.dataset.id];
+                const itemId = item.dataset.id;
+                totalPrice -= item.dataset.price * quantityCount[itemId];
+                delete quantityCount[itemId];
                 orderItems.removeChild(item);
                 if (document.querySelectorAll('.order-item').length == 0) {
                     clear(orderContent);
@@ -281,7 +282,6 @@ const UI = (() => {
                 orderItems.appendChild(orderItemBg);
                 loadOrderPrice();
 
-
                 const enableRemovBtnEffects = (() => {
                     const removeBtn = orderItemBg.querySelector('.order-remove');
                     //I was unable to find a css solution for the orderItem to be blurred when hovering over the removeBtn
@@ -313,7 +313,6 @@ const UI = (() => {
                         removeOrderItem(orderItemBg);
                     });
                 })();
-
             };
 
             const loadOrderPrice = () => {
@@ -359,7 +358,7 @@ const UI = (() => {
             else {
                 quantityCount[id]++;
                 totalPrice += price;
-                document.querySelector(`[data-id=${selectedItem.dataset.menuItem}]`)
+                document.querySelector(`[data-id=${selectedCard.dataset.menuItem}]`)
                     .querySelector('.order-item-quantity-text').innerText = quantityCount[id];
                 loadOrderPrice();
             }
@@ -430,7 +429,7 @@ const UI = (() => {
         }
     }
 
-    return { load };
+    return { load, orderAside };
 })();
 
 export default UI;

@@ -29,30 +29,34 @@ const storage = (() => {
     };
 
     const session = (() => {
-        let orderItemList = [];
+        const savedOrderItemList = JSON.parse(sessionStorage.getItem('orderItemList'));
+        let orderItemList = savedOrderItemList ? savedOrderItemList : [];
+
         const log = () => {
             console.log('starting log..');
-            orderItemList.forEach((listItem) => {
-                const id = listItem.match(/data-menu-item="([^"]+)"/);
-                console.log(id[1]);
-            });
+            if(orderItemList.length>0){
+
+                orderItemList.forEach((listItem) => {
+                    const id = listItem.match(/data-menu-item="([^"]+)"/);
+                    console.log(id[1]);
+                });
+            }
+            else console.log('empty');
         }
         const addOrderItem = (item) => {
             if (storageAvailable("sessionStorage")) {
                 orderItemList.push(item.outerHTML);
-                updateOrderItemList();
+                updateOrderItemList(orderItemList);
             }
         };
 
         const removeOrderItem = (targetId) => {
             if (storageAvailable('sessionStorage')) {
-                // log();
-                orderItemList = orderItemList.filter(item => {
+                const newOrderedItemList = orderItemList.filter(item => {
                     const itemId = item.match(/data-menu-item="([^"]+)"/)[1];
                     if(targetId!=itemId) return item;
                 });
-                console.log('removed');
-                updateOrderItemList();
+                updateOrderItemList(newOrderedItemList);
             }
         };
 
@@ -61,22 +65,27 @@ const storage = (() => {
             updateOrderItemList();
         };
 
-        const updateOrderItemList = () => {
-            sessionStorage.setItem('orderItemList',
-                JSON.stringify(orderItemList));
+        const updateOrderItemList = (list) => {
+            if(list && list.length>0){
+                sessionStorage.setItem('orderItemList', 
+                JSON.stringify(list));
+            }
+            else{
+                sessionStorage.setItem('orderItemList', 
+                JSON.stringify([]));
+            }
+
         };
 
         const loadOrderItemList = () => {
             if (storageAvailable('sessionStorage')) {
-                const itemList = JSON.parse(sessionStorage.getItem('orderItemList'));
-                if(itemList != null){
-                    if (itemList.length > 0) {
-                        for (let item of itemList) {
+                // const itemList = JSON.parse(sessionStorage.getItem('orderItemList'));
+                if(orderItemList != null && orderItemList != []){
+                        for (let item of orderItemList) {
                             const foodCardContainer = document.createElement('div');
                             foodCardContainer.innerHTML = item;
                             UI.orderAside.loadOrder(foodCardContainer.firstChild, true);
                         }
-                    }
                 }
             }
         };

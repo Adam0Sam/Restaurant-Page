@@ -66,6 +66,7 @@ const storage = (() => {
         };
 
         const updateOrderItemList = (list) => {
+            orderItemList = list;
             if(list && list.length>0){
                 sessionStorage.setItem('orderItemList', 
                 JSON.stringify(list));
@@ -74,7 +75,6 @@ const storage = (() => {
                 sessionStorage.setItem('orderItemList', 
                 JSON.stringify([]));
             }
-
         };
 
         const loadOrderItemList = () => {

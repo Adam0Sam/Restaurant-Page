@@ -117,7 +117,6 @@ const UI = (() => {
             });
         };
 
-
         clear(content);
 
         const nameTop = createDiv('name-top');
@@ -385,17 +384,19 @@ const UI = (() => {
         return { loadOrder }
     })();
 
-    const payment = () => {
-        document.querySelectorAll('body').innerText = 'payment:)'
-    };
+    // TO BE CONTINUED    
 
-    const orders = () => {
-        document.querySelectorAll('body').innerText = 'orders:)'
-    }
+    // const payment = () => {
+    //     content.innerText = 'payment:)'
+    // };
 
-    const settings = () => {
-        document.querySelectorAll('body').innerText = 'settings:)'
-    }
+    // const orders = () => {
+    //     content.innerText = 'orders:)'
+    // }
+
+    // const settings = () => {
+    //     content.innerText = 'settings:)'
+    // }
 
     const load = {
         menuBtns() {
@@ -404,9 +405,9 @@ const UI = (() => {
                 const functionMap = {
                     "HOME": home,
                     "MENU": menu,
-                    "PAYMENT": payment,
-                    "ORDERS": orders,
-                    "SETTINGS": settings
+                    // "PAYMENT": payment,
+                    // "ORDERS": orders,
+                    // "SETTINGS": settings
                 }
                 clear(content)
                 functionMap[item.id]();

@@ -42,6 +42,17 @@ const UI = (() => {
             buttonsToggle(document.querySelectorAll('.floor-btn'), 'floor-btn-clicked', startLoadingTables);
         };
 
+        const loadTableId = (tableId) => {
+            if(typeof tableId === 'undefined'){
+                const savedTableId = JSON.parse(sessionStorage.getItem('tableId'));
+                tableId = savedTableId ? savedTableId : "not selected";
+            }
+            document.querySelector('.table-selection').innerText = tableId;
+            document.querySelector('.table-order').innerText = tableId;
+
+            sessionStorage.setItem('tableId', tableId);
+        }
+
         const loadTables = (floor) => {
             clear(tables)
             tables.innerHTML =
@@ -73,36 +84,35 @@ const UI = (() => {
             loadSelection();
             const setTableId = (item) => {
                 const tableId = item.classList[1].split('-')[1];
-                document.querySelector('.table-selection').innerText = tableId;
+                loadTableId(tableId);
             };
             buttonsToggle(document.querySelectorAll('.restaurant-table'), 'table-clicked', setTableId);
-            selectionBtnClicked();
-
-
+            
         };
+
 
         const loadSelection = (tableId) => {
             clear(selection);
-            if (typeof tableId === 'undefined') tableId = "not selected";
             selection.innerHTML =
                 `<div class="order-icons">
                 <img class="table-image" src="./images/small table icon.svg" alt="">
                 <p class="table-text">TABLE:</p>
-                <p class="table-count table-selection">${tableId}</p>
+                <p class="table-count table-selection"></p>
             </div>
             <button id="selection-btn">SELECT AND CONTINUE</button>`
             content.appendChild(selection);
+            loadTableId(tableId);
+            selectionBtnClicked();
         };
 
         const selectionBtnClicked = () => {
             const button = document.getElementById("selection-btn");
             button.addEventListener('click', () => {
                 const tableId = document.querySelector('.table-selection').innerText;
-                if (tableId === 'not selected') {
+                if (tableId == 'not selected') {
                     alert('Select a table.');
                     return;
                 }
-                document.querySelector('.table-order').innerText = tableId
                 document.getElementById('MENU').click();
             });
         };

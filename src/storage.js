@@ -62,7 +62,7 @@ const storage = (() => {
 
         const removeAllOrderItems = () => {
             orderItemList = [];
-            updateOrderItemList();
+            updateOrderItemList(orderItemList);
         };
 
         const updateOrderItemList = (list) => {

@@ -42,9 +42,15 @@ const UI = (() => {
             buttonsToggle(document.querySelectorAll('.floor-btn'), 'floor-btn-clicked', startLoadingTables);
         };
 
-        const loadTableId = (tableId) => {
+        const loadTableId =  (tableId) => {
             if(typeof tableId === 'undefined'){
-                const savedTableId = JSON.parse(sessionStorage.getItem('tableId'));
+                let savedTableId = false;
+                if(typeof sessionStorage.getItem('tableId') != 'null')
+                {
+                    console.log(savedTableId);
+                    console.log(`SESSION: ${sessionStorage.getItem('tableId')}`);
+                    savedTableId = sessionStorage.getItem('tableId');
+                }
                 tableId = savedTableId ? savedTableId : "not selected";
             }
             document.querySelector('.table-selection').innerText = tableId;
@@ -270,6 +276,11 @@ const UI = (() => {
                     clear(orderContent);
                     load.orderEmpty();
                 }
+                else{
+                    loadOrderPrice();
+                }
+
+
             };
 
             const loadOrderItem = () => {
